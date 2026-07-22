@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>pbsolvers</title>
+<meta name="description" content="하루를 나누는 앱 하나, 시간을 보내는 게임 하나. 타임박스와 셰프의 레시피를 만듭니다.">
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+
+<meta property="og:type" content="website">
+<meta property="og:title" content="pbsolvers">
+<meta property="og:description" content="하루를 나누는 앱 하나, 시간을 보내는 게임 하나.">
+<meta property="og:locale" content="ko_KR">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=IBM+Plex+Mono:wght@400;500&display=swap">
+
+<style>
+:root {
+  /* 두 앱 아이콘이 모두 따뜻한 피치톤이다. 어두운 코코아 바탕에 올려 아이콘이 스스로 빛나게 한다. */
+  --ground: #16100E;
+  --surface: #1F1613;
+  --surface-lift: #2A1E1A;
+  --edge: #3B2A24;
+  --paper: #F7EEE8;
+  --muted: #B29A8E;
+  --muted-dim: #7E695F;
+  /* 타임박스는 아이콘 속 시계의 붉은 코랄, 셰프의 레시피는 살구빛. */
+  --timebox: #F5473F;
+  --chef: #FFB183;
+
+  --shell: min(1120px, 100% - 3rem);
+  --step: clamp(4.5rem, 9vw, 8rem);
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html { -webkit-text-size-adjust: 100%; }
+
+body {
+  margin: 0;
+  background: var(--ground);
+  color: var(--paper);
+  font-family: Pretendard Variable, Pretendard, -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+  font-size: 1rem;
+  line-height: 1.7;
+  /* 한국어는 단어 중간에서 끊지 않는다. */
+  word-break: keep-all;
+  overflow-wrap: break-word;
+  -webkit-font-smoothing: antialiased;
+}
+
+a { color: inherit; }
+
+:focus-visible {
+  outline: 2px solid var(--chef);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+.shell { width: var(--shell); margin-inline: auto; }
+
+.mono {
+  font-family: IBM Plex Mono, ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.75rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted-dim);
+}
+
+/* ---------- 상단 ---------- */
+
+.top {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+  padding-block: 1.75rem;
+  border-bottom: 1px solid var(--edge);
+}
+
+.wordmark {
+  font-family: Bricolage Grotesque, Pretendard Variable, sans-serif;
+  font-weight: 800;
+  font-size: 1.25rem;
+  letter-spacing: -0.03em;
+  text-decoration: none;
+}
+
+.wordmark span { color: var(--timebox); }
+
+.top a.mono { text-decoration: none; transition: color 0.2s; }
+.top a.mono:hover { color: var(--paper); }
+
+
+/* ---------- 히어로 ---------- */
+
+.hero { padding-block: calc(var(--step) * 0.7) calc(var(--step) * 0.35); }
+
+.hero__inner { display: grid; gap: clamp(2rem, 5vw, 3rem); }
+
+/* 넓은 화면에서는 문장과 블록 판을 나란히 둔다. 세로로 늘어놓으면 가운데가 비고 페이지만 길어진다. */
+@media (min-width: 900px) {
+  .hero__inner {
+    grid-template-columns: 1.15fr 0.85fr;
+    align-items: center;
+    gap: clamp(2.5rem, 5vw, 4rem);
+  }
+}
+
+.hero .eyebrow { display: block; margin-bottom: 1.75rem; }
+
+.hero h1 {
+  margin: 0;
+  font-weight: 800;
+  font-size: clamp(1.95rem, 3.6vw, 2.9rem);
+  line-height: 1.22;
+  letter-spacing: -0.035em;
+}
+
+.hero h1 em {
+  font-style: normal;
+  color: var(--chef);
+}
+
+.hero p {
+  margin: 1.75rem 0 0;
+  max-width: 46ch;
+  color: var(--muted);
+  font-size: clamp(1rem, 1.6vw, 1.125rem);
+}
+
+/* ---------- 블록 필드 (시그니처) ----------
+   타임박스의 앱 아이콘이 아이소메트릭 큐브이고, 셰프의 레시피는 타일을 슬롯에 쌓는 게임이다.
+   그래서 빈 슬롯이 깔린 판 위에 앱 두 개가 블록으로 올라와 있는 모습으로 그린다.
+   남은 빈 슬롯은 아직 만들지 않은 것들이다.
+   앱 카드에 마우스를 올리거나 포커스하면 그 앱의 블록이 떠오른다. */
+
+.field { width: min(100%, 620px); }
+
+@media (max-width: 899px) {
+  .field { margin-top: 0.5rem; }
+}
+
+.field svg { display: block; width: 100%; height: auto; overflow: visible; }
+
+.slot { fill: #241A16; stroke: #33241E; stroke-width: 1; }
+
+.cube { transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1); }
+.cube polygon { transition: fill 0.4s ease; }
+
+.cube[data-app] { cursor: pointer; }
+.cube.is-lifted { transform: translateY(-13px); }
+
+/* 등장: 안쪽에서 바깥으로 하나씩 자리를 잡는다. */
+.field.is-ready .cube { animation: settle 0.62s cubic-bezier(0.22, 1, 0.36, 1) backwards; }
+
+@keyframes settle {
+  from { opacity: 0; transform: translateY(-26px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ---------- 앱 ---------- */
+
+.apps { padding-block: calc(var(--step) * 0.35) calc(var(--step) * 0.8); }
+
+.apps h2 {
+  margin: 0 0 2.5rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+  font-family: IBM Plex Mono, monospace;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted-dim);
+}
+
+.grid {
+  display: grid;
+  gap: 1.25rem;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 21rem), 1fr));
+}
+
+.card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  padding: clamp(1.5rem, 3vw, 2rem);
+  background: var(--surface);
+  border: 1px solid var(--edge);
+  border-radius: 20px;
+  transition: background 0.3s, border-color 0.3s, transform 0.3s;
+}
+
+.card:hover, .card:focus-within {
+  background: var(--surface-lift);
+  border-color: color-mix(in srgb, var(--tone) 45%, var(--edge));
+  transform: translateY(-3px);
+}
+
+.card__head { display: flex; align-items: center; gap: 1rem; }
+
+.card__icon {
+  width: 68px;
+  height: 68px;
+  flex: none;
+  border-radius: 16px;
+  /* 아이콘 배경이 밝아 어두운 바탕에서 경계가 떠 보인다. 얇은 안쪽 테두리로 눌러준다. */
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.14);
+}
+
+.card__title { margin: 0; font-size: 1.3rem; font-weight: 700; letter-spacing: -0.02em; }
+
+.card__meta { display: block; margin-top: 0.35rem; color: var(--tone); opacity: 0.85; }
+
+.card__body { margin: 0; color: var(--muted); flex: 1; }
+
+.card__link {
+  align-self: flex-start;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.7rem 1.15rem;
+  border-radius: 999px;
+  background: var(--tone);
+  color: var(--ground);
+  font-weight: 700;
+  font-size: 0.9rem;
+  text-decoration: none;
+  transition: filter 0.2s, gap 0.2s;
+}
+
+.card__link:hover { filter: brightness(1.12); gap: 0.75rem; }
+.card__link svg { width: 14px; height: 14px; }
+
+/* ---------- 하단 ---------- */
+
+.foot {
+  border-top: 1px solid var(--edge);
+  padding-block: 2.5rem 3.5rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem 2rem;
+  justify-content: space-between;
+  align-items: baseline;
+}
+
+.foot > * { min-width: 0; }
+.foot a { text-decoration: none; border-bottom: 1px solid var(--edge); transition: border-color 0.2s; overflow-wrap: anywhere; }
+.foot a:hover { border-color: var(--chef); }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  .cube.is-lifted { transform: none; }
+}
+</style>
+</head>
+<body>
+
+<header class="shell top">
+  <a class="wordmark" href="/">pbsolvers<span>.</span></a>
+  <a class="mono" href="mailto:lee2piri@gmail.com">lee2piri@gmail.com</a>
+</header>
+
+<main>
+  <section class="shell hero">
+    <div class="hero__inner">
+      <div>
+        <span class="mono eyebrow">개인 개발 · 앱 두 개</span>
+        <h1>하루를 나누는 앱 하나,<br><em>시간을 보내는</em> 게임 하나.</h1>
+        <p>둘 다 블록에서 시작합니다. 하나는 하루를 시간 블록으로 자르고, 다른 하나는 재료 타일을 일곱 칸 슬롯에 쌓습니다.</p>
+      </div>
+      <div class="field" id="field" aria-hidden="true"></div>
+    </div>
+  </section>
+
+  <section class="shell apps">
+    <h2 id="apps">만들고 있는 것</h2>
+
+    <div class="grid">
+      <article class="card" style="--tone: var(--timebox)" data-app="timebox">
+        <div class="card__head">
+          <img class="card__icon" src="assets/timebox.png" alt="" width="68" height="68" loading="lazy">
+          <div>
+            <h3 class="card__title">타임박스</h3>
+            <span class="card__meta mono">생산성 · iOS</span>
+          </div>
+        </div>
+        <p class="card__body">할 일을 시간 블록으로 옮겨, 무엇을 할지가 아니라 언제 할지까지 정하는 플래너.</p>
+        <a class="card__link" href="https://apps.apple.com/app/id6757224927">
+          App Store에서 보기
+          <svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M4 12 12 4M6 4h6v6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </a>
+      </article>
+
+      <article class="card" style="--tone: var(--chef)" data-app="chef">
+        <div class="card__head">
+          <img class="card__icon" src="assets/chefsrecipe.png" alt="" width="68" height="68" loading="lazy">
+          <div>
+            <h3 class="card__title">셰프의 레시피</h3>
+            <span class="card__meta mono">게임 · iOS</span>
+          </div>
+        </div>
+        <p class="card__body">같은 재료 세 개를 모으면 요리 완성. 슬롯은 일곱 칸뿐이라, 한 수만 잘못 골라도 막히는 타일 퍼즐.</p>
+        <a class="card__link" href="https://apps.apple.com/app/id6789183651">
+          App Store에서 보기
+          <svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M4 12 12 4M6 4h6v6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </a>
+      </article>
+    </div>
+  </section>
+</main>
+
+<footer class="shell foot">
+  <span class="mono">© 2026 pbsolvers</span>
+  <span class="mono">문의 <a href="mailto:lee2piri@gmail.com">lee2piri@gmail.com</a></span>
+</footer>
+
+<script>
+(function () {
+  var field = document.getElementById('field');
+  if (!field) return;
+
+  var NS = 'http://www.w3.org/2000/svg';
+  // 2:1 아이소메트릭. 슬롯 한 칸의 너비 W, 높이 H, 블록이 솟는 깊이 D.
+  var W = 62, H = 31, D = 30;
+  var COLS = 6, ROWS = 3;
+
+  // 판 위에서 앱이 차지한 칸. 나머지는 빈 슬롯이다.
+  var PLACED = { '1,0': 'timebox', '3,1': 'chef' };
+
+  // 면 순서: 윗면, 왼쪽면, 오른쪽면.
+  var TONE = {
+    timebox: ['#F5473F', '#C33028', '#9B241D'],
+    chef: ['#FFB183', '#D9834F', '#AF6236']
+  };
+
+  var iso = function (col, row) {
+    return { x: (col - row) * W / 2, y: (col + row) * H / 2 };
+  };
+  var pts = function (list) {
+    return list.map(function (p) { return p[0].toFixed(1) + ',' + p[1].toFixed(1); }).join(' ');
+  };
+  var diamond = function (x, y) {
+    return [[x, y], [x + W / 2, y + H / 2], [x, y + H], [x - W / 2, y + H / 2]];
+  };
+
+  var svg = document.createElementNS(NS, 'svg');
+  svg.setAttribute('role', 'presentation');
+
+  var cells = [];
+  for (var r = 0; r < ROWS; r++) {
+    for (var c = 0; c < COLS; c++) cells.push([c, r]);
+  }
+  // 뒤쪽(열+행이 작은 쪽)부터 그려야 앞의 블록이 위로 겹친다.
+  cells.sort(function (a, b) { return (a[0] + a[1]) - (b[0] + b[1]); });
+
+  cells.forEach(function (cell, i) {
+    var col = cell[0], row = cell[1];
+    var p = iso(col, row);
+    var app = PLACED[col + ',' + row];
+
+    var g = document.createElementNS(NS, 'g');
+    g.setAttribute('class', 'cube');
+    g.style.animationDelay = (i * 42) + 'ms';
+
+    if (!app) {
+      var slot = document.createElementNS(NS, 'polygon');
+      slot.setAttribute('class', 'slot');
+      slot.setAttribute('points', pts(diamond(p.x, p.y)));
+      g.appendChild(slot);
+    } else {
+      g.setAttribute('data-app', app);
+      var tone = TONE[app];
+      [
+        diamond(p.x, p.y - D),
+        [[p.x - W / 2, p.y + H / 2 - D], [p.x, p.y + H - D], [p.x, p.y + H], [p.x - W / 2, p.y + H / 2]],
+        [[p.x + W / 2, p.y + H / 2 - D], [p.x, p.y + H - D], [p.x, p.y + H], [p.x + W / 2, p.y + H / 2]]
+      ].forEach(function (face, n) {
+        var poly = document.createElementNS(NS, 'polygon');
+        poly.setAttribute('points', pts(face));
+        poly.setAttribute('fill', tone[n]);
+        g.appendChild(poly);
+      });
+    }
+
+    svg.appendChild(g);
+  });
+
+  var minX = iso(0, ROWS - 1).x - W / 2;
+  var maxX = iso(COLS - 1, 0).x + W / 2;
+  var minY = iso(0, 0).y - D;
+  var maxY = iso(COLS - 1, ROWS - 1).y + H;
+  var pad = 14;
+  svg.setAttribute('viewBox', [minX - pad, minY - pad, (maxX - minX) + pad * 2, (maxY - minY) + pad * 2].join(' '));
+
+  field.appendChild(svg);
+  requestAnimationFrame(function () { field.classList.add('is-ready'); });
+
+  // 앱 카드와 블록을 연결한다 — 두 앱이 같은 판 위의 블록이라는 게 이 페이지의 요지다.
+  document.querySelectorAll('.card[data-app]').forEach(function (card) {
+    var cube = svg.querySelector('.cube[data-app="' + card.dataset.app + '"]');
+    if (!cube) return;
+    var lift = function () { cube.classList.add('is-lifted'); };
+    var drop = function () { cube.classList.remove('is-lifted'); };
+    card.addEventListener('mouseenter', lift);
+    card.addEventListener('mouseleave', drop);
+    card.addEventListener('focusin', lift);
+    card.addEventListener('focusout', drop);
+  });
+})();
+</script>
+
+</body>
+</html>
