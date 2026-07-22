@@ -1,0 +1,1045 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>개인정보 처리방침 · 셰프의 레시피 — pbsolvers</title>
+    <meta
+      name="description"
+      content="셰프의 레시피가 수집하는 정보와 이용 목적. 계정 없이도 모든 기능을 이용할 수 있습니다."
+    />
+    <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml" />
+
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content="개인정보 처리방침 · 셰프의 레시피" />
+    <meta
+      property="og:description"
+      content="셰프의 레시피가 수집하는 정보와 이용 목적."
+    />
+    <meta property="og:locale" content="ko_KR" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=IBM+Plex+Mono:wght@400;500&display=swap"
+    />
+
+    <style>
+      /* 홈(index.html)과 같은 토큰. 문서 페이지라 본문 폭만 좁게 잡는다. */
+      :root {
+        --ground: #16100e;
+        --surface: #1f1613;
+        --surface-lift: #2a1e1a;
+        --edge: #3b2a24;
+        --paper: #f7eee8;
+        --muted: #b29a8e;
+        --muted-dim: #7e695f;
+        --timebox: #f5473f;
+        --chef: #ffb183;
+
+        --shell: min(1120px, 100% - 3rem);
+        /* 긴 산문은 한 줄이 길면 읽기 어렵다. 홈보다 좁게 둔다. */
+        --prose: min(68ch, 100% - 3rem);
+        --step: clamp(4.5rem, 9vw, 8rem);
+      }
+
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+      }
+
+      html {
+        -webkit-text-size-adjust: 100%;
+        scroll-behavior: smooth;
+      }
+
+      body {
+        margin: 0;
+        background: var(--ground);
+        color: var(--paper);
+        font-family:
+          Pretendard Variable,
+          Pretendard,
+          -apple-system,
+          BlinkMacSystemFont,
+          system-ui,
+          sans-serif;
+        font-size: 1rem;
+        line-height: 1.75;
+        /* 한국어는 단어 중간에서 끊지 않는다. */
+        word-break: keep-all;
+        overflow-wrap: break-word;
+        -webkit-font-smoothing: antialiased;
+      }
+
+      a {
+        color: inherit;
+      }
+
+      :focus-visible {
+        outline: 2px solid var(--chef);
+        outline-offset: 3px;
+        border-radius: 2px;
+      }
+
+      .shell {
+        width: var(--shell);
+        margin-inline: auto;
+      }
+
+      .prose {
+        width: var(--prose);
+        margin-inline: auto;
+      }
+
+      .mono {
+        font-family:
+          IBM Plex Mono,
+          ui-monospace,
+          SFMono-Regular,
+          Menlo,
+          monospace;
+        font-size: 0.75rem;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: var(--muted-dim);
+      }
+
+      /* ---------- 상단 ---------- */
+
+      .top {
+        display: flex;
+        align-items: baseline;
+        justify-content: space-between;
+        gap: 1rem;
+        padding-block: 1.75rem;
+        border-bottom: 1px solid var(--edge);
+      }
+
+      .wordmark {
+        font-family:
+          Bricolage Grotesque,
+          Pretendard Variable,
+          sans-serif;
+        font-weight: 800;
+        font-size: 1.25rem;
+        letter-spacing: -0.03em;
+        text-decoration: none;
+      }
+
+      .wordmark span {
+        color: var(--timebox);
+      }
+
+      .top a.mono {
+        text-decoration: none;
+        transition: color 0.2s;
+      }
+      .top a.mono:hover {
+        color: var(--paper);
+      }
+
+      /* ---------- 제목 ---------- */
+
+      .head {
+        padding-block: calc(var(--step) * 0.5) calc(var(--step) * 0.3);
+      }
+
+      .head .eyebrow {
+        display: block;
+        margin-bottom: 1.25rem;
+      }
+
+      .head h1 {
+        margin: 0;
+        font-weight: 800;
+        font-size: clamp(1.8rem, 3.4vw, 2.6rem);
+        line-height: 1.2;
+        letter-spacing: -0.035em;
+      }
+
+      .head h1 em {
+        font-style: normal;
+        color: var(--chef);
+      }
+
+      .head .updated {
+        margin: 1.25rem 0 0;
+        color: var(--muted-dim);
+      }
+
+      .lede {
+        margin: 2rem 0 0;
+        padding: 1.25rem 1.4rem;
+        background: var(--surface);
+        border: 1px solid var(--edge);
+        border-left: 3px solid var(--chef);
+        border-radius: 4px;
+        color: var(--muted);
+      }
+
+      .lede strong {
+        color: var(--paper);
+      }
+
+      /* ---------- 본문 ---------- */
+
+      main {
+        padding-bottom: var(--step);
+      }
+
+      section {
+        padding-top: clamp(2.75rem, 6vw, 4rem);
+      }
+
+      h2 {
+        margin: 0 0 1.25rem;
+        font-family:
+          Bricolage Grotesque,
+          Pretendard Variable,
+          sans-serif;
+        font-weight: 600;
+        font-size: 1.3rem;
+        letter-spacing: -0.02em;
+        padding-bottom: 0.6rem;
+        border-bottom: 1px solid var(--edge);
+      }
+
+      h3 {
+        margin: 2.25rem 0 0.75rem;
+        font-weight: 700;
+        font-size: 1.02rem;
+        letter-spacing: -0.01em;
+        color: var(--chef);
+      }
+
+      p {
+        margin: 0 0 1rem;
+        color: var(--muted);
+      }
+
+      p strong,
+      li strong {
+        color: var(--paper);
+        font-weight: 700;
+      }
+
+      ul {
+        margin: 0 0 1rem;
+        padding-left: 1.1rem;
+        color: var(--muted);
+      }
+
+      li {
+        margin-bottom: 0.5rem;
+      }
+
+      ol {
+        margin: 0 0 1rem;
+        padding-left: 1.3rem;
+        color: var(--muted);
+      }
+
+      code {
+        font-family:
+          IBM Plex Mono,
+          ui-monospace,
+          SFMono-Regular,
+          Menlo,
+          monospace;
+        font-size: 0.86em;
+        background: var(--surface-lift);
+        border: 1px solid var(--edge);
+        border-radius: 3px;
+        padding: 0.1em 0.4em;
+        color: var(--paper);
+      }
+
+      /* 링크는 본문에서 눈에 띄되 소란스럽지 않게. */
+      main a {
+        color: var(--chef);
+        text-decoration-color: color-mix(in srgb, var(--chef) 35%, transparent);
+        text-underline-offset: 3px;
+        transition: text-decoration-color 0.2s;
+      }
+      main a:hover {
+        text-decoration-color: var(--chef);
+      }
+
+      /* ---------- 표 ---------- */
+
+      /* 표는 좁은 화면에서 가로로 넘친다. 페이지 전체가 아니라 표만 스크롤되게 감싼다. */
+      .table-wrap {
+        margin: 0 0 1.25rem;
+        overflow-x: auto;
+        border: 1px solid var(--edge);
+        border-radius: 4px;
+        background: var(--surface);
+      }
+
+      table {
+        width: 100%;
+        min-width: 30rem;
+        border-collapse: collapse;
+        font-size: 0.94rem;
+      }
+
+      th,
+      td {
+        padding: 0.7rem 0.95rem;
+        text-align: left;
+        vertical-align: top;
+        border-bottom: 1px solid var(--edge);
+      }
+
+      th {
+        font-weight: 700;
+        color: var(--paper);
+        background: var(--surface-lift);
+        white-space: nowrap;
+      }
+
+      td {
+        color: var(--muted);
+      }
+
+      tbody tr:last-child th,
+      tbody tr:last-child td {
+        border-bottom: 0;
+      }
+
+      /* ---------- 언어 전환 ---------- */
+
+      .langs {
+        display: flex;
+        gap: 0.5rem;
+        margin-top: 2.5rem;
+      }
+
+      .langs a {
+        font-family:
+          IBM Plex Mono,
+          ui-monospace,
+          monospace;
+        font-size: 0.72rem;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        text-decoration: none;
+        padding: 0.45rem 0.85rem;
+        border: 1px solid var(--edge);
+        border-radius: 999px;
+        color: var(--muted-dim);
+        transition:
+          color 0.2s,
+          border-color 0.2s;
+      }
+
+      .langs a:hover {
+        color: var(--paper);
+        border-color: var(--muted-dim);
+      }
+
+      .langs a[aria-current="true"] {
+        color: var(--ground);
+        background: var(--chef);
+        border-color: var(--chef);
+      }
+
+      /* 두 언어를 한 페이지에 두고 전환한다. 별도 URL을 만들면 스토어에 어느 쪽을
+         적을지 애매해지고, 어차피 같은 내용이라 문서를 둘로 관리할 이유가 없다. */
+      body[data-lang="ko"] [lang="en"],
+      body[data-lang="en"] [lang="ko"] {
+        display: none;
+      }
+
+      /* ---------- 하단 ---------- */
+
+      .foot {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: baseline;
+        justify-content: space-between;
+        gap: 0.75rem;
+        padding-block: 2rem;
+        border-top: 1px solid var(--edge);
+      }
+
+      .foot a {
+        color: var(--muted);
+      }
+
+      .back {
+        display: inline-block;
+        margin-top: 2.5rem;
+        font-family:
+          IBM Plex Mono,
+          ui-monospace,
+          monospace;
+        font-size: 0.75rem;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        text-decoration: none;
+        color: var(--muted-dim);
+        transition: color 0.2s;
+      }
+      .back:hover {
+        color: var(--chef);
+      }
+    </style>
+  </head>
+  <body data-lang="ko">
+    <header class="shell top">
+      <a class="wordmark" href="/">pbsolvers<span>.</span></a>
+      <a class="mono" href="mailto:lee2piri@gmail.com">lee2piri@gmail.com</a>
+    </header>
+
+    <main>
+      <div class="prose head">
+        <span class="mono eyebrow">셰프의 레시피</span>
+        <h1 lang="ko">개인정보 <em>처리방침</em></h1>
+        <h1 lang="en">Privacy <em>Policy</em></h1>
+
+        <p class="updated mono" lang="ko">최종 수정일 2026년 7월 22일</p>
+        <p class="updated mono" lang="en">Last updated July 22, 2026</p>
+
+        <nav class="langs" aria-label="언어 / Language">
+          <a href="#" data-set-lang="ko" aria-current="true">한국어</a>
+          <a href="#" data-set-lang="en">English</a>
+        </nav>
+
+        <p class="lede" lang="ko">
+          <strong>본 앱은 계정 없이도 모든 기능을 이용할 수 있습니다.</strong>
+          로그인은 선택 사항이며, 인앱 결제는 없습니다.
+        </p>
+        <p class="lede" lang="en">
+          <strong>The App is fully playable without an account.</strong>
+          Signing in is optional, and there are no in-app purchases.
+        </p>
+      </div>
+
+      <!-- ================= 한국어 ================= -->
+      <div lang="ko">
+        <section class="prose">
+          <h2>1. 개요</h2>
+          <p>
+            pbsolvers(이하 "개발자")는 모바일 게임 <strong>셰프의 레시피</strong>(Chef's
+            Recipe, 이하 "본 앱")를 제공하며, 이용자의 개인정보를 소중히 다룹니다. 본
+            방침은 본 앱이 어떤 정보를 수집하고 어떻게 이용하는지 설명합니다.
+          </p>
+        </section>
+
+        <section class="prose">
+          <h2>2. 수집하는 정보</h2>
+
+          <h3>2-1. 로그인하지 않고 이용하는 경우 (게스트)</h3>
+          <p>
+            <strong>개발자에게 직접 전송되는 계정 정보가 없습니다.</strong> 게임 진행
+            상황(클리어한 스테이지, 점수, 별, 소리·언어 설정)은 이용자의 기기 안에만
+            저장되며, 앱을 삭제하면 함께 사라집니다.
+          </p>
+          <p>
+            다만 로그인 여부와 관계없이 <strong>제2-3항의 분석 정보와 제2-4항의 광고
+            정보는 수집됩니다.</strong>
+          </p>
+
+          <h3>2-2. Google 또는 Apple 계정으로 로그인한 경우</h3>
+          <p>로그인 시 해당 서비스로부터 아래 정보를 받아 저장합니다.</p>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th scope="col">항목</th>
+                  <th scope="col">이용 목적</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr><td>이메일 주소</td><td>계정 식별, 문의 응대</td></tr>
+                <tr><td>이름(닉네임)</td><td>앱 내 표시</td></tr>
+                <tr><td>프로필 이미지 주소</td><td>앱 내 표시</td></tr>
+                <tr><td>로그인 제공자 (Google / Apple)</td><td>계정 식별</td></tr>
+                <tr><td>선호 언어, 시간대</td><td>앱 표시 설정</td></tr>
+                <tr><td>최근 활동 일시</td><td>미사용 계정 정리</td></tr>
+                <tr>
+                  <td>게임 기록 (스테이지 번호, 점수, 별 개수, 플레이 일시)</td>
+                  <td>진행 상황 백업 및 기기 간 이어하기</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <p>
+            <strong>Apple 로그인의 "나의 이메일 가리기"</strong>를 선택하면 실제 이메일
+            대신 Apple이 만든 전달용 주소(<code>@privaterelay.appleid.com</code>)를 받게
+            되며, 개발자는 실제 주소를 알 수 없습니다.
+          </p>
+
+          <h3>2-3. 앱 이용 분석</h3>
+          <p>
+            본 앱은 <strong>Google Analytics for Firebase</strong>를 이용해 앱 이용
+            현황을 분석합니다. 이는 이용자를 개인으로 식별하기 위한 것이 아니라, 어느
+            단계에서 이용자가 어려움을 겪는지 파악해 게임을 개선하기 위한 것입니다.
+          </p>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th scope="col">항목</th>
+                  <th scope="col">이용 목적</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>앱 인스턴스 ID (Firebase가 생성하는 익명 식별자)</td>
+                  <td>중복 집계 방지</td>
+                </tr>
+                <tr><td>앱 실행·종료·세션 시간</td><td>이용 빈도와 재방문율 측정</td></tr>
+                <tr>
+                  <td>스테이지 진행 이벤트 (시작·클리어·실패, 점수, 소요 시간, 실패 사유)</td>
+                  <td>난이도 조정</td>
+                </tr>
+                <tr><td>광고 시청 제안 및 수락 여부</td><td>광고 배치 개선</td></tr>
+                <tr>
+                  <td>기기 모델, 운영체제 버전, 언어, 국가·지역</td>
+                  <td>이용 환경 분석</td>
+                </tr>
+                <tr>
+                  <td>앱 버전, 로그인 여부(게스트/로그인)</td>
+                  <td>버전·이용자군별 비교</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <p>
+            앱 인스턴스 ID는 이름·이메일 등 이용자를 특정할 수 있는 정보와 결합되지
+            않으며, 앱을 삭제하면 초기화됩니다. 국가·지역은 IP 주소로부터 추정되며 정확한
+            위치는 수집하지 않습니다.
+          </p>
+
+          <h3>2-4. 광고</h3>
+          <p>
+            본 앱은 <strong>Google AdMob</strong>을 통해 광고를 노출합니다. 광고 제공
+            과정에서 Google이 기기 정보와 기기의 광고 식별자를 처리할 수 있습니다.
+          </p>
+          <p>
+            본 앱은 <strong>앱 추적 투명성(ATT) 권한을 요청하지 않으며, 맞춤형 광고를
+            위한 추적을 하지 않습니다.</strong> 모든 광고 요청은 비개인화 방식으로
+            전송됩니다.
+          </p>
+          <p>
+            비개인화 광고에서도 <strong>광고 노출 빈도 제한, 부정 클릭 방지, 집계
+            리포팅</strong> 목적으로 기기의 광고 식별자가 이용될 수 있습니다. 또한 광고
+            제공 과정에서 IP 주소로부터 추정된 <strong>대략적인 위치(국가·도시
+            수준)</strong>가 이용될 수 있습니다.
+          </p>
+          <p>Google의 데이터 처리에 대해서는 아래를 참고하세요.</p>
+          <ul>
+            <li>
+              <a href="https://policies.google.com/privacy" rel="noopener"
+                >Google 개인정보처리방침</a
+              >
+            </li>
+            <li>
+              <a
+                href="https://policies.google.com/technologies/partner-sites"
+                rel="noopener"
+                >파트너 사이트·앱에서의 Google 데이터 이용</a
+              >
+            </li>
+          </ul>
+
+          <h3>2-5. 수집하지 않는 정보</h3>
+          <p>본 앱은 아래 정보를 <strong>수집하지 않습니다.</strong></p>
+          <ul>
+            <li>카메라, 마이크, 사진 라이브러리 (권한 자체를 요청하지 않습니다)</li>
+            <li>정밀 위치 정보 (GPS 등 위치 권한을 요청하지 않습니다)</li>
+            <li>연락처, 주소록</li>
+            <li>전화번호</li>
+            <li>결제 정보 (본 앱에는 인앱 결제가 없습니다)</li>
+            <li>푸시 알림 토큰 (본 앱은 푸시 알림을 사용하지 않습니다)</li>
+          </ul>
+        </section>
+
+        <section class="prose">
+          <h2>3. 정보의 이용 목적</h2>
+          <p>수집한 정보는 아래 목적으로만 이용합니다.</p>
+          <ol>
+            <li>계정 인증 및 유지</li>
+            <li>게임 진행 상황의 백업과 기기 간 동기화</li>
+            <li>문의 응대</li>
+            <li>앱 이용 분석 및 게임 개선 (제2-3항)</li>
+            <li>광고 노출 (제2-4항)</li>
+          </ol>
+          <p>
+            <strong
+              >개발자는 이용자의 개인정보를 판매하지 않으며, 광고 목적으로 제3자에게
+              제공하지 않습니다.</strong
+            >
+          </p>
+        </section>
+
+        <section class="prose">
+          <h2>4. 처리 위탁 및 제3자</h2>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th scope="col">위탁받는 자</th>
+                  <th scope="col">위탁 업무</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Google LLC</td>
+                  <td>
+                    소셜 로그인(Google 로그인), 앱 이용 분석(Google Analytics for
+                    Firebase), 광고 제공(AdMob)
+                  </td>
+                </tr>
+                <tr><td>Apple Inc.</td><td>소셜 로그인(Sign in with Apple)</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <p>
+            법령에 따라 수사기관 등이 적법한 절차로 요청하는 경우를 제외하고, 위 외의
+            제3자에게 개인정보를 제공하지 않습니다.
+          </p>
+
+          <h3>4-1. 개인정보의 국외 이전</h3>
+          <p>위 수탁사는 국외에 소재하며, 위탁 항목이 국외로 이전됩니다.</p>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th scope="col">이전받는 자</th>
+                  <th scope="col">이전되는 국가</th>
+                  <th scope="col">이전 항목</th>
+                  <th scope="col">이전 시점 및 방법</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Google LLC</td>
+                  <td>미국 등 Google 데이터센터 소재국</td>
+                  <td>제2-2·2-3·2-4항의 정보</td>
+                  <td>서비스 이용 시 네트워크를 통해 전송</td>
+                </tr>
+                <tr>
+                  <td>Apple Inc.</td>
+                  <td>미국 등 Apple 데이터센터 소재국</td>
+                  <td>제2-2항의 로그인 정보</td>
+                  <td>로그인 시 네트워크를 통해 전송</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <section class="prose">
+          <h2>5. 보관 기간 및 파기</h2>
+          <ul>
+            <li>계정 정보와 게임 기록은 <strong>계정이 유지되는 동안</strong> 보관합니다.</li>
+            <li>계정 삭제를 요청하면 계정 정보와 연결된 게임 기록을 삭제합니다.</li>
+            <li>기기 안에만 저장된 게스트 진행 상황은 앱을 삭제하면 즉시 사라집니다.</li>
+            <li>
+              분석 정보는 Google Analytics에 설정된 보관 기간이 지나면 자동으로
+              삭제됩니다.
+              <!-- 실제 값은 Firebase 콘솔 → Analytics → 데이터 설정 → 데이터 보관.
+                   구체적 기간을 적는 편이 낫다. 확인되면 이 문장에 넣을 것. -->
+            </li>
+          </ul>
+        </section>
+
+        <section class="prose">
+          <h2>6. 이용자의 권리</h2>
+          <p>이용자는 언제든지 아래 권리를 행사할 수 있습니다.</p>
+          <ul>
+            <li>
+              <strong>로그아웃</strong>: 앱 내 <code>설정 → 계정 → 로그아웃</code>
+            </li>
+            <li>
+              <strong>열람·정정·삭제 요청</strong>: 아래 문의처로 요청하시면 확인 후
+              처리합니다.
+            </li>
+            <li>
+              <strong>계정 삭제</strong>: 아래 문의처로 가입 시 사용한 이메일과 함께
+              요청해 주세요. 영업일 기준 7일 이내에 처리합니다.
+            </li>
+            <li>
+              <strong>분석 정보 수집 중단</strong>: 앱을 삭제하면 분석 정보 수집이
+              중단되고 앱 인스턴스 ID가 초기화됩니다. 이미 수집된 분석 정보의 삭제를
+              원하시면 아래 문의처로 요청해 주세요.
+            </li>
+          </ul>
+          <p>
+            계정을 삭제하면 백업된 진행 상황이 함께 삭제되며 복구할 수 없습니다. 게스트로는
+            계속 플레이할 수 있습니다.
+          </p>
+        </section>
+
+        <section class="prose">
+          <h2>7. 아동의 개인정보</h2>
+          <p>
+            본 앱은 아동을 주 대상으로 하지 않습니다. 만 14세 미만 아동의 개인정보를
+            알고서 수집하지 않으며, 그러한 정보가 수집된 사실을 알게 되면 즉시 삭제합니다.
+          </p>
+        </section>
+
+        <section class="prose">
+          <h2>8. 정보의 안전성 확보</h2>
+          <ul>
+            <li>서버와의 모든 통신은 HTTPS로 암호화합니다.</li>
+            <li>
+              개발자는 이용자의 비밀번호를 저장하지 않습니다. 인증은 Google과 Apple이
+              처리합니다.
+            </li>
+          </ul>
+        </section>
+
+        <section class="prose">
+          <h2>9. 방침 변경</h2>
+          <p>
+            본 방침이 변경되면 이 페이지의 최종 수정일을 갱신하고 변경 내용을 게시합니다.
+          </p>
+        </section>
+
+        <section class="prose">
+          <h2>10. 문의처</h2>
+          <p>개인정보 관련 문의 및 요청은 아래로 연락해 주세요.</p>
+          <ul>
+            <li>
+              이메일:
+              <a href="mailto:lee2piri@gmail.com">lee2piri@gmail.com</a>
+            </li>
+            <li>개발자: <strong>pbsolvers</strong></li>
+          </ul>
+          <a class="back" href="/">← pbsolvers 홈</a>
+        </section>
+      </div>
+
+      <!-- ================= English ================= -->
+      <div lang="en">
+        <section class="prose">
+          <h2>1. Overview</h2>
+          <p>
+            pbsolvers ("we") develops the mobile game <strong>Chef's Recipe</strong> ("the
+            App"). This policy explains what information the App collects and how it is
+            used.
+          </p>
+        </section>
+
+        <section class="prose">
+          <h2>2. Information We Collect</h2>
+
+          <h3>2.1 Playing without signing in (guest)</h3>
+          <p>
+            <strong>No account information is sent to us.</strong> Your progress (cleared
+            stages, scores, stars, sound and language settings) is stored only on your
+            device and is removed when you delete the App.
+          </p>
+          <p>
+            However, the analytics data in 2.3 and the advertising data in 2.4 are
+            collected whether or not you sign in.
+          </p>
+
+          <h3>2.2 Signing in with Google or Apple</h3>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th scope="col">Data</th>
+                  <th scope="col">Purpose</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr><td>Email address</td><td>Account identification, support</td></tr>
+                <tr><td>Name / nickname</td><td>Display in the App</td></tr>
+                <tr><td>Profile image URL</td><td>Display in the App</td></tr>
+                <tr>
+                  <td>Sign-in provider (Google / Apple)</td>
+                  <td>Account identification</td>
+                </tr>
+                <tr><td>Preferred language, time zone</td><td>Display settings</td></tr>
+                <tr><td>Last activity timestamp</td><td>Cleaning up inactive accounts</td></tr>
+                <tr>
+                  <td>Game records (stage, score, stars, played at)</td>
+                  <td>Progress backup and cross-device sync</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <p>
+            If you use <strong>Sign in with Apple's "Hide My Email"</strong>, we receive an
+            Apple relay address (<code>@privaterelay.appleid.com</code>) and never see your
+            real address.
+          </p>
+
+          <h3>2.3 Usage analytics</h3>
+          <p>
+            The App uses <strong>Google Analytics for Firebase</strong> to understand how
+            it is played. The purpose is not to identify you, but to find where players get
+            stuck so the game can be improved.
+          </p>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th scope="col">Data</th>
+                  <th scope="col">Purpose</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>App instance ID (an anonymous identifier generated by Firebase)</td>
+                  <td>Avoiding double counting</td>
+                </tr>
+                <tr>
+                  <td>App opens, closes and session length</td>
+                  <td>Measuring frequency and return rate</td>
+                </tr>
+                <tr>
+                  <td>Stage events (start, clear, fail, score, duration, failure reason)</td>
+                  <td>Difficulty tuning</td>
+                </tr>
+                <tr>
+                  <td>Whether a rewarded ad was offered and accepted</td>
+                  <td>Improving ad placement</td>
+                </tr>
+                <tr>
+                  <td>Device model, OS version, language, country/region</td>
+                  <td>Understanding the install base</td>
+                </tr>
+                <tr>
+                  <td>App version, signed-in state (guest or signed in)</td>
+                  <td>Comparing versions and cohorts</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <p>
+            The app instance ID is not combined with your name, email or any other
+            identifying information, and it is reset when you delete the App. Country and
+            region are estimated from your IP address; precise location is not collected.
+          </p>
+
+          <h3>2.4 Advertising</h3>
+          <p>
+            The App shows ads through <strong>Google AdMob</strong>. Google may process
+            device information and the device's advertising identifier to deliver them.
+          </p>
+          <p>
+            <strong
+              >The App does not request App Tracking Transparency permission and does not
+              track you for personalized advertising.</strong
+            >
+            All ad requests are sent as non-personalized.
+          </p>
+          <p>
+            Even for non-personalized ads, the advertising identifier may be used for
+            <strong>frequency capping, fraud prevention and aggregate reporting</strong>.
+            Ad delivery may also use an
+            <strong>approximate location (country or city level)</strong> derived from your
+            IP address.
+          </p>
+          <ul>
+            <li>
+              <a href="https://policies.google.com/privacy" rel="noopener"
+                >Google Privacy Policy</a
+              >
+            </li>
+            <li>
+              <a
+                href="https://policies.google.com/technologies/partner-sites"
+                rel="noopener"
+                >How Google uses data from partner sites and apps</a
+              >
+            </li>
+          </ul>
+
+          <h3>2.5 What we do not collect</h3>
+          <p>
+            Camera, microphone, photo library (the App does not request these permissions),
+            precise location (the App does not request location permission), contacts,
+            phone number, payment information (the App has no in-app purchases), and push
+            notification tokens (the App does not use push notifications).
+          </p>
+        </section>
+
+        <section class="prose">
+          <h2>3. How We Use Information</h2>
+          <p>
+            Account authentication; progress backup and cross-device sync; responding to
+            support requests; usage analysis and game improvement as described in 2.3; and
+            serving ads as described in 2.4.
+          </p>
+          <p>
+            <strong
+              >We do not sell your personal information and do not share it with third
+              parties for advertising purposes.</strong
+            >
+          </p>
+        </section>
+
+        <section class="prose">
+          <h2>4. Service Providers</h2>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th scope="col">Provider</th>
+                  <th scope="col">Purpose</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Google LLC</td>
+                  <td>
+                    Google Sign-In, usage analytics (Google Analytics for Firebase),
+                    advertising (AdMob)
+                  </td>
+                </tr>
+                <tr><td>Apple Inc.</td><td>Sign in with Apple</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <p>
+            We do not share personal information with anyone else, except where required by
+            law through lawful process.
+          </p>
+
+          <h3>4.1 International transfers</h3>
+          <p>
+            Both providers are located outside the Republic of Korea, so the data entrusted
+            to them is transferred abroad — to the United States and other countries where
+            Google and Apple operate data centres — over the network as you use the App.
+          </p>
+        </section>
+
+        <section class="prose">
+          <h2>5. Retention and Deletion</h2>
+          <p>
+            Account information and game records are retained while your account exists.
+            When you request account deletion, we delete your account information and the
+            game records linked to it. Guest progress stored only on your device is removed
+            as soon as you delete the App. Analytics data is deleted automatically once the
+            retention period configured in Google Analytics elapses.
+          </p>
+        </section>
+
+        <section class="prose">
+          <h2>6. Your Rights</h2>
+          <ul>
+            <li>
+              <strong>Sign out</strong>: in the App,
+              <code>Settings → Account → Sign Out</code>
+            </li>
+            <li>
+              <strong>Access, correction, deletion</strong>: contact us at the address
+              below
+            </li>
+            <li>
+              <strong>Account deletion</strong>: email us from or with the address you
+              signed up with, and we will process it within
+              7 business days
+            </li>
+            <li>
+              <strong>Stopping analytics collection</strong>: deleting the App stops
+              collection and resets the app instance ID. To have already-collected
+              analytics data deleted, contact us at the address below.
+            </li>
+          </ul>
+          <p>
+            Deleting your account also deletes your backed-up progress and cannot be
+            undone. You can continue playing as a guest.
+          </p>
+        </section>
+
+        <section class="prose">
+          <h2>7. Children's Privacy</h2>
+          <p>
+            The App is not directed at children. We do not knowingly collect personal
+            information from children under 14 (under 13 where applicable), and we delete
+            such information as soon as we become aware of it.
+          </p>
+        </section>
+
+        <section class="prose">
+          <h2>8. Security</h2>
+          <p>
+            All communication with our servers is encrypted with HTTPS. We never store your
+            password — authentication is handled entirely by Google and Apple.
+          </p>
+        </section>
+
+        <section class="prose">
+          <h2>9. Changes</h2>
+          <p>
+            If this policy changes, we will update the "Last updated" date on this page and
+            post the changes here.
+          </p>
+        </section>
+
+        <section class="prose">
+          <h2>10. Contact</h2>
+          <ul>
+            <li>Email: <a href="mailto:lee2piri@gmail.com">lee2piri@gmail.com</a></li>
+            <li>Developer: <strong>pbsolvers</strong></li>
+          </ul>
+          <a class="back" href="/">← pbsolvers home</a>
+        </section>
+      </div>
+    </main>
+
+    <footer class="shell foot">
+      <span class="mono">© 2026 pbsolvers</span>
+      <span class="mono"
+        >문의 <a href="mailto:lee2piri@gmail.com">lee2piri@gmail.com</a></span
+      >
+    </footer>
+
+    <script>
+      // 언어 전환. 서버 없이 도는 정적 페이지라 CSS로 한쪽을 숨기고 body의 data-lang만 바꾼다.
+      // 링크에 ?lang= 을 붙여 공유해도 그 언어로 열리게 해 둔다 — 스토어 리스팅에서
+      // 영어권 이용자에게 영어 주소를 줄 수 있어야 한다.
+      (function () {
+        var buttons = document.querySelectorAll("[data-set-lang]");
+        if (!buttons.length) return;
+
+        function apply(lang) {
+          if (lang !== "ko" && lang !== "en") lang = "ko";
+          document.body.setAttribute("data-lang", lang);
+          document.documentElement.setAttribute("lang", lang);
+          buttons.forEach(function (button) {
+            var on = button.getAttribute("data-set-lang") === lang;
+            // aria-current 는 스크린리더에 "지금 이것"이라고 알리는 표준 방법이다.
+            button.setAttribute("aria-current", on ? "true" : "false");
+          });
+        }
+
+        buttons.forEach(function (button) {
+          button.addEventListener("click", function (event) {
+            event.preventDefault();
+            var lang = button.getAttribute("data-set-lang");
+            apply(lang);
+            var url = new URL(window.location.href);
+            url.searchParams.set("lang", lang);
+            history.replaceState(null, "", url);
+          });
+        });
+
+        var requested = new URL(window.location.href).searchParams.get("lang");
+        // 요청이 없으면 브라우저 언어를 따르되, 한국어가 아니면 영어로 연다.
+        if (!requested) {
+          requested = (navigator.language || "ko").toLowerCase().indexOf("ko") === 0
+            ? "ko"
+            : "en";
+        }
+        apply(requested);
+      })();
+    </script>
+  </body>
+</html>

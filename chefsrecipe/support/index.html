@@ -1,0 +1,849 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>고객지원 · 셰프의 레시피 — pbsolvers</title>
+    <meta
+      name="description"
+      content="셰프의 레시피 문의처와 자주 묻는 질문. 진행 상황 복원, 로그인, 계정 삭제 안내."
+    />
+    <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml" />
+
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content="고객지원 · 셰프의 레시피" />
+    <meta
+      property="og:description"
+      content="문의처와 자주 묻는 질문."
+    />
+    <meta property="og:locale" content="ko_KR" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=IBM+Plex+Mono:wght@400;500&display=swap"
+    />
+
+    <style>
+      /* 홈(index.html)·개인정보 페이지와 같은 토큰. */
+      :root {
+        --ground: #16100e;
+        --surface: #1f1613;
+        --surface-lift: #2a1e1a;
+        --edge: #3b2a24;
+        --paper: #f7eee8;
+        --muted: #b29a8e;
+        --muted-dim: #7e695f;
+        --timebox: #f5473f;
+        --chef: #ffb183;
+
+        --shell: min(1120px, 100% - 3rem);
+        --prose: min(68ch, 100% - 3rem);
+        --step: clamp(4.5rem, 9vw, 8rem);
+      }
+
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+      }
+
+      html {
+        -webkit-text-size-adjust: 100%;
+        scroll-behavior: smooth;
+      }
+
+      body {
+        margin: 0;
+        background: var(--ground);
+        color: var(--paper);
+        font-family:
+          Pretendard Variable,
+          Pretendard,
+          -apple-system,
+          BlinkMacSystemFont,
+          system-ui,
+          sans-serif;
+        font-size: 1rem;
+        line-height: 1.75;
+        /* 한국어는 단어 중간에서 끊지 않는다. */
+        word-break: keep-all;
+        overflow-wrap: break-word;
+        -webkit-font-smoothing: antialiased;
+      }
+
+      a {
+        color: inherit;
+      }
+
+      :focus-visible {
+        outline: 2px solid var(--chef);
+        outline-offset: 3px;
+        border-radius: 2px;
+      }
+
+      .shell {
+        width: var(--shell);
+        margin-inline: auto;
+      }
+
+      .prose {
+        width: var(--prose);
+        margin-inline: auto;
+      }
+
+      .mono {
+        font-family:
+          IBM Plex Mono,
+          ui-monospace,
+          SFMono-Regular,
+          Menlo,
+          monospace;
+        font-size: 0.75rem;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: var(--muted-dim);
+      }
+
+      /* ---------- 상단 ---------- */
+
+      .top {
+        display: flex;
+        align-items: baseline;
+        justify-content: space-between;
+        gap: 1rem;
+        padding-block: 1.75rem;
+        border-bottom: 1px solid var(--edge);
+      }
+
+      .wordmark {
+        font-family:
+          Bricolage Grotesque,
+          Pretendard Variable,
+          sans-serif;
+        font-weight: 800;
+        font-size: 1.25rem;
+        letter-spacing: -0.03em;
+        text-decoration: none;
+      }
+
+      .wordmark span {
+        color: var(--timebox);
+      }
+
+      .top a.mono {
+        text-decoration: none;
+        transition: color 0.2s;
+      }
+      .top a.mono:hover {
+        color: var(--paper);
+      }
+
+      /* ---------- 제목 ---------- */
+
+      .head {
+        padding-block: calc(var(--step) * 0.5) calc(var(--step) * 0.3);
+      }
+
+      .head .eyebrow {
+        display: block;
+        margin-bottom: 1.25rem;
+      }
+
+      .head h1 {
+        margin: 0;
+        font-weight: 800;
+        font-size: clamp(1.8rem, 3.4vw, 2.6rem);
+        line-height: 1.2;
+        letter-spacing: -0.035em;
+      }
+
+      .head h1 em {
+        font-style: normal;
+        color: var(--chef);
+      }
+
+      /* 문의처는 이 페이지에 온 이유 그 자체다. 스크롤 없이 바로 보이게 한다. */
+      .contact {
+        margin: 2rem 0 0;
+        padding: 1.5rem 1.6rem;
+        background: var(--surface);
+        border: 1px solid var(--edge);
+        border-left: 3px solid var(--chef);
+        border-radius: 4px;
+      }
+
+      .contact p {
+        margin: 0 0 0.75rem;
+        color: var(--muted);
+      }
+
+      .contact .mail {
+        display: inline-block;
+        font-family:
+          Bricolage Grotesque,
+          Pretendard Variable,
+          sans-serif;
+        font-weight: 600;
+        font-size: clamp(1.05rem, 2.4vw, 1.35rem);
+        letter-spacing: -0.02em;
+        color: var(--chef);
+        text-decoration-color: color-mix(in srgb, var(--chef) 35%, transparent);
+        text-underline-offset: 4px;
+      }
+      .contact .mail:hover {
+        text-decoration-color: var(--chef);
+      }
+
+      /* ---------- 본문 ---------- */
+
+      main {
+        padding-bottom: var(--step);
+      }
+
+      section {
+        padding-top: clamp(2.75rem, 6vw, 4rem);
+      }
+
+      h2 {
+        margin: 0 0 1.25rem;
+        font-family:
+          Bricolage Grotesque,
+          Pretendard Variable,
+          sans-serif;
+        font-weight: 600;
+        font-size: 1.3rem;
+        letter-spacing: -0.02em;
+        padding-bottom: 0.6rem;
+        border-bottom: 1px solid var(--edge);
+      }
+
+      p {
+        margin: 0 0 1rem;
+        color: var(--muted);
+      }
+
+      p strong,
+      li strong {
+        color: var(--paper);
+        font-weight: 700;
+      }
+
+      ul {
+        margin: 0 0 1rem;
+        padding-left: 1.1rem;
+        color: var(--muted);
+      }
+
+      li {
+        margin-bottom: 0.5rem;
+      }
+
+      code {
+        font-family:
+          IBM Plex Mono,
+          ui-monospace,
+          SFMono-Regular,
+          Menlo,
+          monospace;
+        font-size: 0.86em;
+        background: var(--surface-lift);
+        border: 1px solid var(--edge);
+        border-radius: 3px;
+        padding: 0.1em 0.4em;
+        color: var(--paper);
+      }
+
+      main a {
+        color: var(--chef);
+        text-decoration-color: color-mix(in srgb, var(--chef) 35%, transparent);
+        text-underline-offset: 3px;
+        transition: text-decoration-color 0.2s;
+      }
+      main a:hover {
+        text-decoration-color: var(--chef);
+      }
+
+      /* ---------- FAQ ---------- */
+
+      /* <details> 를 쓴다. 질문이 열두 개라 모두 펼쳐두면 원하는 항목을 찾기 어렵고,
+         JS로 만든 아코디언과 달리 브라우저 찾기(Ctrl-F)가 닫힌 항목도 열어준다. */
+      details {
+        border-bottom: 1px solid var(--edge);
+      }
+
+      details summary {
+        list-style: none;
+        cursor: pointer;
+        padding: 1rem 2rem 1rem 0;
+        position: relative;
+        font-weight: 700;
+        color: var(--paper);
+        transition: color 0.2s;
+      }
+
+      details summary::-webkit-details-marker {
+        display: none;
+      }
+
+      details summary:hover {
+        color: var(--chef);
+      }
+
+      /* 직접 그린 표식. 열리면 회전한다. */
+      details summary::after {
+        content: "";
+        position: absolute;
+        right: 0.35rem;
+        top: 1.55rem;
+        width: 0.5rem;
+        height: 0.5rem;
+        border-right: 1.5px solid var(--muted-dim);
+        border-bottom: 1.5px solid var(--muted-dim);
+        transform: rotate(45deg);
+        transform-origin: center;
+        transition:
+          transform 0.2s,
+          border-color 0.2s;
+      }
+
+      details[open] summary::after {
+        transform: rotate(-135deg);
+        border-color: var(--chef);
+      }
+
+      details .answer {
+        padding-bottom: 1.1rem;
+      }
+
+      details .answer > :last-child {
+        margin-bottom: 0;
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        details summary::after {
+          transition: none;
+        }
+      }
+
+      /* ---------- 언어 전환 ---------- */
+
+      .langs {
+        display: flex;
+        gap: 0.5rem;
+        margin-top: 2.5rem;
+      }
+
+      .langs a {
+        font-family:
+          IBM Plex Mono,
+          ui-monospace,
+          monospace;
+        font-size: 0.72rem;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        text-decoration: none;
+        padding: 0.45rem 0.85rem;
+        border: 1px solid var(--edge);
+        border-radius: 999px;
+        color: var(--muted-dim);
+        transition:
+          color 0.2s,
+          border-color 0.2s;
+      }
+
+      .langs a:hover {
+        color: var(--paper);
+        border-color: var(--muted-dim);
+      }
+
+      .langs a[aria-current="true"] {
+        color: var(--ground);
+        background: var(--chef);
+        border-color: var(--chef);
+      }
+
+      body[data-lang="ko"] [lang="en"],
+      body[data-lang="en"] [lang="ko"] {
+        display: none;
+      }
+
+      /* ---------- 하단 ---------- */
+
+      .foot {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: baseline;
+        justify-content: space-between;
+        gap: 0.75rem;
+        padding-block: 2rem;
+        border-top: 1px solid var(--edge);
+      }
+
+      .foot a {
+        color: var(--muted);
+      }
+
+      .back {
+        display: inline-block;
+        margin-top: 2.5rem;
+        font-family:
+          IBM Plex Mono,
+          ui-monospace,
+          monospace;
+        font-size: 0.75rem;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        text-decoration: none;
+        color: var(--muted-dim);
+        transition: color 0.2s;
+      }
+      .back:hover {
+        color: var(--chef);
+      }
+    </style>
+  </head>
+  <body data-lang="ko">
+    <header class="shell top">
+      <a class="wordmark" href="/">pbsolvers<span>.</span></a>
+      <a class="mono" href="mailto:lee2piri@gmail.com">lee2piri@gmail.com</a>
+    </header>
+
+    <main>
+      <div class="prose head">
+        <span class="mono eyebrow">셰프의 레시피</span>
+        <h1 lang="ko">고객<em>지원</em></h1>
+        <h1 lang="en"><em>Support</em></h1>
+
+        <nav class="langs" aria-label="언어 / Language">
+          <a href="#" data-set-lang="ko" aria-current="true">한국어</a>
+          <a href="#" data-set-lang="en">English</a>
+        </nav>
+
+        <div class="contact" lang="ko">
+          <p>게임 이용 중 문제가 있거나 건의하실 내용이 있으면 언제든 연락 주세요.</p>
+          <a class="mail" href="mailto:lee2piri@gmail.com">lee2piri@gmail.com</a>
+        </div>
+        <div class="contact" lang="en">
+          <p>If something goes wrong or you have a suggestion, get in touch any time.</p>
+          <a class="mail" href="mailto:lee2piri@gmail.com">lee2piri@gmail.com</a>
+        </div>
+      </div>
+
+      <!-- ================= 한국어 ================= -->
+      <div lang="ko">
+        <section class="prose">
+          <h2>문의하실 때</h2>
+          <p>아래를 함께 적어주시면 훨씬 빠르게 확인할 수 있습니다.</p>
+          <ul>
+            <li>사용 기기 (예: iPhone 14, Galaxy S23)</li>
+            <li>운영체제 버전 (예: iOS 18.2)</li>
+            <li>게임 버전 (App Store 앱 페이지 → 버전 기록에서 확인)</li>
+            <li>문제가 생긴 상황과 화면 사진</li>
+          </ul>
+          <p>답변은 보통 영업일 기준 7일 안에 드립니다.</p>
+        </section>
+
+        <section class="prose">
+          <h2>자주 묻는 질문</h2>
+
+          <details>
+            <summary>계정을 꼭 만들어야 하나요?</summary>
+            <div class="answer">
+              <p>
+                아니요. <strong>로그인 없이 100개 스테이지를 모두 플레이할 수
+                있습니다.</strong> 로그인은 진행 상황을 백업하고 다른 기기에서 이어서
+                하고 싶을 때만 필요합니다.
+              </p>
+            </div>
+          </details>
+
+          <details>
+            <summary>기기를 바꾸면 진행 상황이 넘어가나요?</summary>
+            <div class="answer">
+              <p>
+                로그인한 경우에만 넘어갑니다. 기존 기기에서 <code>설정 → 계정</code>에서
+                Google 또는 Apple로 로그인해 두고, 새 기기에서 <strong>같은 계정으로
+                로그인</strong>하면 진행 상황이 복원됩니다.
+              </p>
+              <p>
+                로그인하지 않고 플레이한 기록은 기기 안에만 저장되므로, 앱을 삭제하거나
+                기기를 바꾸면 복구할 수 없습니다.
+              </p>
+            </div>
+          </details>
+
+          <details>
+            <summary>진행 상황이 사라졌어요</summary>
+            <div class="answer">
+              <ul>
+                <li>
+                  <strong>로그인한 적이 있다면</strong>: 같은 계정으로 다시 로그인해
+                  주세요. 서버에 백업된 기록이 복원됩니다.
+                </li>
+                <li>
+                  <strong>게스트로만 플레이했다면</strong>: 기기 안에만 저장되기 때문에
+                  앱을 삭제했다면 복구가 어렵습니다. 상황을 이메일로 알려주시면 확인해
+                  보겠습니다.
+                </li>
+              </ul>
+            </div>
+          </details>
+
+          <details>
+            <summary>인터넷이 없어도 되나요?</summary>
+            <div class="answer">
+              <p>
+                네. <strong>오프라인에서도 게임은 정상적으로 진행됩니다.</strong>
+                오프라인에서 세운 기록은 기기에 보관되었다가 다시 인터넷에 연결되면
+                자동으로 서버와 동기화됩니다.
+              </p>
+            </div>
+          </details>
+
+          <details>
+            <summary>"업데이트가 필요합니다" 화면이 떠요</summary>
+            <div class="answer">
+              <p>
+                스토어에서 최신 버전으로 업데이트해 주세요. 이미 최신 버전인데도 계속
+                뜬다면 앱을 완전히 종료했다 다시 실행해 보시고, 그래도 같다면 이메일로
+                알려주세요.
+              </p>
+            </div>
+          </details>
+
+          <details>
+            <summary>로그인이 안 돼요</summary>
+            <div class="answer">
+              <ul>
+                <li>기기가 인터넷에 연결되어 있는지 확인해 주세요.</li>
+                <li>
+                  iOS에서 Apple 로그인이 안 되면
+                  <code>설정 → [내 이름] → 로그인 및 보안</code>에서 Apple 계정이 정상인지
+                  확인해 주세요.
+                </li>
+                <li>
+                  Android에서 Google 로그인이 안 되면 기기에 Google 계정이 등록되어
+                  있는지 확인해 주세요.
+                </li>
+              </ul>
+              <p>
+                계속 안 되면 사용하신 로그인 방식(Google / Apple)과 오류 화면을 함께
+                보내주세요.
+              </p>
+            </div>
+          </details>
+
+          <details>
+            <summary>광고를 없앨 수 있나요?</summary>
+            <div class="answer">
+              <p>
+                현재 버전에는 광고 제거 상품이 없습니다. 게임이 막혔을 때
+                <strong>광고를 보고 이어하기</strong>는 선택 사항이며, 보지 않아도 다시
+                시작해서 계속 플레이할 수 있습니다.
+              </p>
+            </div>
+          </details>
+
+          <details>
+            <summary>소리가 안 나와요</summary>
+            <div class="answer">
+              <p>
+                <code>설정 → 오디오</code>에서 배경음악과 효과음이 각각
+                <strong>ON</strong>으로 되어 있는지 확인해 주세요. 기기가 무음 모드이거나
+                볼륨이 낮은 경우도 확인해 보세요.
+              </p>
+            </div>
+          </details>
+
+          <details>
+            <summary>언어를 바꾸고 싶어요</summary>
+            <div class="answer">
+              <p>
+                <code>설정 → 언어</code>에서 한국어와 영어 중 선택할 수 있습니다.
+              </p>
+            </div>
+          </details>
+
+          <details>
+            <summary>별은 어떻게 받나요?</summary>
+            <div class="answer">
+              <p>
+                스테이지를 <strong>얼마나 빨리 클리어했는지</strong>에 따라 별 1~3개를
+                받습니다. 클리어한 스테이지는 몇 번이든 다시 도전해서 별을 올릴 수
+                있습니다.
+              </p>
+            </div>
+          </details>
+
+          <details>
+            <summary>판이 막혔어요</summary>
+            <div class="answer">
+              <p>
+                슬롯 7칸이 꽉 차면 더 이상 재료를 담을 수 없습니다. 지금 받은 주문에
+                필요한 재료를 먼저 확인하고, 당장 쓰지 않을 재료는 나중에 집는 것이
+                요령입니다. 막혔을 때는 광고를 보고 이어하거나 스테이지를 다시 시작할 수
+                있습니다.
+              </p>
+            </div>
+          </details>
+        </section>
+
+        <section class="prose">
+          <h2>계정 삭제</h2>
+          <p>
+            계정과 서버에 백업된 진행 상황을 모두 삭제하고 싶으시면,
+            <strong>가입하실 때 사용한 이메일 주소로</strong> 아래 주소에 "계정 삭제
+            요청"이라고 보내주세요.
+          </p>
+          <p>
+            <a href="mailto:lee2piri@gmail.com?subject=계정 삭제 요청"
+              >lee2piri@gmail.com</a
+            >
+          </p>
+          <ul>
+            <li>
+              확인 후 영업일 기준 7일 이내에 계정 정보와 게임 기록을
+              삭제합니다.
+            </li>
+            <li>삭제된 진행 상황은 복구할 수 없습니다.</li>
+            <li>계정을 삭제한 뒤에도 게스트로 계속 플레이할 수 있습니다.</li>
+          </ul>
+        </section>
+
+        <section class="prose">
+          <h2>관련 문서</h2>
+          <ul>
+            <li><a href="/chefsrecipe/privacy/">개인정보 처리방침</a></li>
+          </ul>
+          <a class="back" href="/">← pbsolvers 홈</a>
+        </section>
+      </div>
+
+      <!-- ================= English ================= -->
+      <div lang="en">
+        <section class="prose">
+          <h2>When you write to us</h2>
+          <p>Including these details helps us look into it much faster.</p>
+          <ul>
+            <li>Your device (e.g. iPhone 14, Galaxy S23)</li>
+            <li>OS version (e.g. iOS 18.2)</li>
+            <li>The app version shown on the App Store page</li>
+            <li>What happened, and a screenshot</li>
+          </ul>
+          <p>We usually reply within 7 business days.</p>
+        </section>
+
+        <section class="prose">
+          <h2>Frequently asked questions</h2>
+
+          <details>
+            <summary>Do I need an account?</summary>
+            <div class="answer">
+              <p>
+                No. <strong>All 100 stages are playable without signing in.</strong>
+                Signing in only backs up your progress so you can continue on another
+                device.
+              </p>
+            </div>
+          </details>
+
+          <details>
+            <summary>Will my progress transfer to a new device?</summary>
+            <div class="answer">
+              <p>
+                Only if you are signed in. Sign in with Google or Apple under
+                <code>Settings → Account</code> on your old device, then sign in with the
+                same account on the new one.
+              </p>
+              <p>
+                Guest progress is stored only on the device and cannot be recovered once
+                the app is deleted.
+              </p>
+            </div>
+          </details>
+
+          <details>
+            <summary>My progress disappeared.</summary>
+            <div class="answer">
+              <p>
+                If you have signed in before, sign in again with the same account and your
+                backup will be restored. If you only played as a guest, progress is local
+                to the device — email us and we will look into it.
+              </p>
+            </div>
+          </details>
+
+          <details>
+            <summary>Does it work offline?</summary>
+            <div class="answer">
+              <p>
+                Yes. <strong>The game plays normally offline.</strong> Records made offline
+                are stored on your device and sync automatically once you are back online.
+              </p>
+            </div>
+          </details>
+
+          <details>
+            <summary>It says an update is required.</summary>
+            <div class="answer">
+              <p>
+                Please update to the latest version in the store. If you are already on the
+                latest version, force-quit and reopen the app, and email us if it persists.
+              </p>
+            </div>
+          </details>
+
+          <details>
+            <summary>I can't sign in.</summary>
+            <div class="answer">
+              <ul>
+                <li>Check your internet connection.</li>
+                <li>
+                  On iOS, verify your Apple Account under
+                  <code>Settings → [your name] → Sign-In &amp; Security</code>.
+                </li>
+                <li>On Android, make sure a Google account is added to the device.</li>
+              </ul>
+              <p>
+                If it still fails, tell us which method you used and include the error
+                screen.
+              </p>
+            </div>
+          </details>
+
+          <details>
+            <summary>Can I remove ads?</summary>
+            <div class="answer">
+              <p>
+                There is no ad-removal purchase in the current version. Watching an ad to
+                continue is always optional — you can restart the stage instead.
+              </p>
+            </div>
+          </details>
+
+          <details>
+            <summary>There is no sound.</summary>
+            <div class="answer">
+              <p>
+                Check that Background Music and Sound Effects are set to
+                <strong>ON</strong> under <code>Settings → Audio</code>, and that your
+                device is not on silent.
+              </p>
+            </div>
+          </details>
+
+          <details>
+            <summary>I want to change the language.</summary>
+            <div class="answer">
+              <p>
+                Choose Korean or English under <code>Settings → Language</code>.
+              </p>
+            </div>
+          </details>
+
+          <details>
+            <summary>How do I earn stars?</summary>
+            <div class="answer">
+              <p>
+                Stars (1–3) are awarded based on how quickly you clear a stage. You can
+                replay any cleared stage to improve your rating.
+              </p>
+            </div>
+          </details>
+
+          <details>
+            <summary>I'm stuck on a stage.</summary>
+            <div class="answer">
+              <p>
+                Once all 7 slots are full you cannot pick up more ingredients. Check what
+                the current orders need first, and leave ingredients you will not use right
+                away for later. When you are stuck you can watch an ad to continue, or
+                restart the stage.
+              </p>
+            </div>
+          </details>
+        </section>
+
+        <section class="prose">
+          <h2>Deleting your account</h2>
+          <p>
+            To delete your account and the progress backed up on our servers, email us
+            <strong>from the address you signed up with</strong> with the subject "Account
+            deletion request":
+          </p>
+          <p>
+            <a href="mailto:lee2piri@gmail.com?subject=Account deletion request"
+              >lee2piri@gmail.com</a
+            >
+          </p>
+          <ul>
+            <li>
+              We will delete your account information and game records within
+              7 business days.
+            </li>
+            <li>Deleted progress cannot be recovered.</li>
+            <li>You can keep playing as a guest afterwards.</li>
+          </ul>
+        </section>
+
+        <section class="prose">
+          <h2>Related</h2>
+          <ul>
+            <li><a href="/chefsrecipe/privacy/?lang=en">Privacy Policy</a></li>
+          </ul>
+          <a class="back" href="/">← pbsolvers home</a>
+        </section>
+      </div>
+    </main>
+
+    <footer class="shell foot">
+      <span class="mono">© 2026 pbsolvers</span>
+      <span class="mono"
+        >문의 <a href="mailto:lee2piri@gmail.com">lee2piri@gmail.com</a></span
+      >
+    </footer>
+
+    <script>
+      // 개인정보 페이지와 같은 전환기. 두 파일이 각자 들고 있는 편이, 공용 js 하나를
+      // 두고 페이지마다 경로를 맞추는 것보다 이 규모에서는 덜 번거롭다.
+      (function () {
+        var buttons = document.querySelectorAll("[data-set-lang]");
+        if (!buttons.length) return;
+
+        function apply(lang) {
+          if (lang !== "ko" && lang !== "en") lang = "ko";
+          document.body.setAttribute("data-lang", lang);
+          document.documentElement.setAttribute("lang", lang);
+          buttons.forEach(function (button) {
+            var on = button.getAttribute("data-set-lang") === lang;
+            button.setAttribute("aria-current", on ? "true" : "false");
+          });
+        }
+
+        buttons.forEach(function (button) {
+          button.addEventListener("click", function (event) {
+            event.preventDefault();
+            var lang = button.getAttribute("data-set-lang");
+            apply(lang);
+            var url = new URL(window.location.href);
+            url.searchParams.set("lang", lang);
+            history.replaceState(null, "", url);
+          });
+        });
+
+        var requested = new URL(window.location.href).searchParams.get("lang");
+        if (!requested) {
+          requested =
+            (navigator.language || "ko").toLowerCase().indexOf("ko") === 0 ? "ko" : "en";
+        }
+        apply(requested);
+      })();
+    </script>
+  </body>
+</html>
